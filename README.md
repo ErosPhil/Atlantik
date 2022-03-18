@@ -1,3 +1,3 @@
 # Atlantik
 Projet Atlantik
-Par ErosPhil - 2022 BTS SIO Saint-Brieuc
+Par Eros Philippe - 2022 BTS SIO Lycée François Rabelais, Saint-Brieuc
