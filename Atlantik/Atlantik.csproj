@@ -153,6 +153,12 @@
     <Compile Include="FormModifierBateau.Designer.cs">
       <DependentUpon>FormModifierBateau.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormModifierParametresSite.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormModifierParametresSite.Designer.cs">
+      <DependentUpon>FormModifierParametresSite.cs</DependentUpon>
+    </Compile>
     <Compile Include="Liaison.cs" />
     <Compile Include="Periode.cs" />
     <Compile Include="Port.cs" />
@@ -188,6 +194,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormModifierBateau.resx">
       <DependentUpon>FormModifierBateau.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormModifierParametresSite.resx">
+      <DependentUpon>FormModifierParametresSite.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

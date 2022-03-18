@@ -233,9 +233,9 @@ namespace Atlantik
                         {
                             if(cat != null) //si la catégorie n'est pas vide
                             {
-                                int somme = getCapaciteMaximale(jeuEnr.GetInt32("notraversee"), cat.GetLettre()) - getQuantiteEnregistree(jeuEnr.GetInt32("notraversee"), cat.GetLettre());
+                                int difference = getCapaciteMaximale(jeuEnr.GetInt32("notraversee"), cat.GetLettre()) - getQuantiteEnregistree(jeuEnr.GetInt32("notraversee"), cat.GetLettre());
                                 //Différence entre capacitemax et quantiteenregistree
-                                tabItem[x] = somme.ToString();
+                                tabItem[x] = difference.ToString();
                                 x += 1;
                             }
                         }

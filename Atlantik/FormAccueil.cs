@@ -66,7 +66,8 @@ namespace Atlantik
 
         private void lesParamètresDuSiteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            FormModifierParametresSite form = new FormModifierParametresSite();
+            form.ShowDialog();
         }
 
         private void lesTraverséesToolStripMenuItem_Click(object sender, EventArgs e)

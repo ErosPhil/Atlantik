@@ -149,7 +149,6 @@ namespace Atlantik
 
                 var Textboxes = gbxCapMaxModifierBateau.Controls.OfType<TextBox>();
 
-
                 foreach (TextBox tbx in Textboxes)
                 {
                     maCde.Parameters.AddWithValue("@CAPACITEMAX", tbx.Text);
