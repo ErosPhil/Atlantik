@@ -38,7 +38,7 @@ namespace Atlantik
 
         public override string ToString()
         {
-            return nomport_depart + "--" + nomport_arrivee;
+            return nomport_depart + " - " + nomport_arrivee;
         }
     }
 }

@@ -32,6 +32,7 @@ namespace Atlantik
             this.lblNomPrenom = new System.Windows.Forms.Label();
             this.cmbClient = new System.Windows.Forms.ComboBox();
             this.lvReservations = new System.Windows.Forms.ListView();
+            this.gbxDetailsReservation = new System.Windows.Forms.GroupBox();
             this.SuspendLayout();
             // 
             // lblNomPrenom
@@ -48,7 +49,7 @@ namespace Atlantik
             this.cmbClient.FormattingEnabled = true;
             this.cmbClient.Location = new System.Drawing.Point(95, 6);
             this.cmbClient.Name = "cmbClient";
-            this.cmbClient.Size = new System.Drawing.Size(79, 21);
+            this.cmbClient.Size = new System.Drawing.Size(95, 21);
             this.cmbClient.TabIndex = 1;
             this.cmbClient.SelectedIndexChanged += new System.EventHandler(this.cmbClient_SelectedIndexChanged);
             // 
@@ -57,15 +58,26 @@ namespace Atlantik
             this.lvReservations.HideSelection = false;
             this.lvReservations.Location = new System.Drawing.Point(235, 6);
             this.lvReservations.Name = "lvReservations";
-            this.lvReservations.Size = new System.Drawing.Size(445, 123);
+            this.lvReservations.Size = new System.Drawing.Size(426, 117);
             this.lvReservations.TabIndex = 2;
             this.lvReservations.UseCompatibleStateImageBehavior = false;
+            this.lvReservations.SelectedIndexChanged += new System.EventHandler(this.lvReservations_SelectedIndexChanged);
+            // 
+            // gbxDetailsReservation
+            // 
+            this.gbxDetailsReservation.Location = new System.Drawing.Point(301, 147);
+            this.gbxDetailsReservation.Name = "gbxDetailsReservation";
+            this.gbxDetailsReservation.Size = new System.Drawing.Size(278, 246);
+            this.gbxDetailsReservation.TabIndex = 3;
+            this.gbxDetailsReservation.TabStop = false;
+            this.gbxDetailsReservation.Text = "Réservation";
             // 
             // FormAfficherDetailsReservation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(687, 450);
+            this.ClientSize = new System.Drawing.Size(673, 405);
+            this.Controls.Add(this.gbxDetailsReservation);
             this.Controls.Add(this.lvReservations);
             this.Controls.Add(this.cmbClient);
             this.Controls.Add(this.lblNomPrenom);
@@ -83,5 +95,6 @@ namespace Atlantik
         private System.Windows.Forms.Label lblNomPrenom;
         private System.Windows.Forms.ComboBox cmbClient;
         private System.Windows.Forms.ListView lvReservations;
+        private System.Windows.Forms.GroupBox gbxDetailsReservation;
     }
 }

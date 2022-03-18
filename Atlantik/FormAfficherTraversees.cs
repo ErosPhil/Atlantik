@@ -76,8 +76,12 @@ namespace Atlantik
 
                 MySqlDataReader jeuEnr = maCde.ExecuteReader();
 
-                jeuEnr.Read();
-                return jeuEnr.GetInt32("capacitemax");
+                if(jeuEnr.Read())
+                {
+                    return jeuEnr.GetInt32("capacitemax");
+                }
+                else { return 0; }
+                
             }
             catch (MySqlException e)
             {
@@ -101,6 +105,7 @@ namespace Atlantik
             lvTraversees.Columns.Add("N°", 42); //Ajout des trois premières entêtes en dur
             lvTraversees.Columns.Add("Heure", 50); //
             lvTraversees.Columns.Add("Bateau", 75); //
+            dateDateAfficherTraversees.Value = DateTime.Now; //Actualise la valeur par défaut du calendrier à celle d'aujourd'hui
 
             MySqlDataReader jeuEnr = null;
             MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
