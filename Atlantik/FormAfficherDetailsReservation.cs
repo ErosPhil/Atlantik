@@ -201,7 +201,9 @@ namespace Atlantik
                         maCnx.Close();
                     }
                 }
+
             }
+            
         }
     }
 }
