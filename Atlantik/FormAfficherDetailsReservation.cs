@@ -203,8 +203,7 @@ namespace Atlantik
                     }
                 }
 
-            }//if
-            
+            }
         }
     }
 }
