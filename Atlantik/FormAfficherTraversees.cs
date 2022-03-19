@@ -24,13 +24,13 @@ namespace Atlantik
 
         private int getQuantiteEnregistree(int notraversee, string lettrecategorie)
         {
-            // fonction qui pour un notraversee et une lettrecategorie retourne le nb de places enregistrées (dans les enregistrements de cette traversée)
             MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
+            // fonction qui pour un notraversee et une lettrecategorie retourne le nb de places enregistrées (dans les enregistrements de cette traversée)
             try
             {
                 maCnx.Open();
 
-                var requete = "SELECT sum(quantite)'nbplacesOQP' FROM traversee t, reservation r, enregistrer e WHERE t.notraversee = r.notraversee AND r.noreservation = e.noreservation AND t.notraversee = @NOTRAVERSEE AND e.lettrecategorie = @LETTRECATEGORIE;";
+                string requete = "SELECT sum(quantite)'nbplacesOQP' FROM traversee t, reservation r, enregistrer e WHERE t.notraversee = r.notraversee AND r.noreservation = e.noreservation AND t.notraversee = @NOTRAVERSEE AND e.lettrecategorie = @LETTRECATEGORIE;";
                 var maCde = new MySqlCommand(requete, maCnx);
 
                 maCde.Parameters.AddWithValue("@NOTRAVERSEE", notraversee);
@@ -64,11 +64,12 @@ namespace Atlantik
         private int getCapaciteMaximale(int notraversee, string lettrecategorie)
         {// fonction qui pour un notraversee et une lettrecategorie retourne le nb de places maximales (dans la catégorie en question par rapport au bateau de la traversée)
             MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
+
             try
             {
                 maCnx.Open();
 
-                var requete = "SELECT c.capacitemax FROM contenir c, bateau b, traversee t WHERE c.nobateau = b.nobateau AND b.nobateau = t.nobateau AND t.notraversee = @NOTRAVERSEE AND c.lettrecategorie = @LETTRECATEGORIE";
+                string requete = "SELECT c.capacitemax FROM contenir c, bateau b, traversee t WHERE c.nobateau = b.nobateau AND b.nobateau = t.nobateau AND t.notraversee = @NOTRAVERSEE AND c.lettrecategorie = @LETTRECATEGORIE";
                 var maCde = new MySqlCommand(requete, maCnx);
 
                 maCde.Parameters.AddWithValue("@NOTRAVERSEE", notraversee);
@@ -106,8 +107,6 @@ namespace Atlantik
             lvTraversees.Columns.Add("Heure", 50); //
             lvTraversees.Columns.Add("Bateau", 75); //
             dateDateAfficherTraversees.Value = DateTime.Now; //Actualise la valeur par défaut du calendrier à celle d'aujourd'hui
-
-            MySqlDataReader jeuEnr = null;
             MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
             try
             {
@@ -117,7 +116,7 @@ namespace Atlantik
 
                 var maCde = new MySqlCommand(requete, maCnx);
 
-                jeuEnr = maCde.ExecuteReader();
+                MySqlDataReader jeuEnr = maCde.ExecuteReader();
 
                 int x = 0; //compteur d'incrémentation
 
@@ -151,7 +150,7 @@ namespace Atlantik
             {
                 if (maCnx is object & maCnx.State == ConnectionState.Open)
                 {
-                    maCnx.Close();
+                    //maCnx.Close();
                 }
             }
         }
@@ -159,7 +158,6 @@ namespace Atlantik
         private void lbxSecteursAfficherTraversees_SelectedIndexChanged(object sender, EventArgs ea) //Quand l'index de secteur sélectionné change
         {
             cmbLiaisonAfficherTraversees.Items.Clear();
-            MySqlDataReader jeuEnr = null;
             MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
             try
             {
@@ -171,7 +169,7 @@ namespace Atlantik
 
                 maCde.Parameters.AddWithValue("@NOSECTEUR", ((Secteur)lbxSecteursAfficherTraversees.SelectedItem).GetNoSecteur());
 
-                jeuEnr = maCde.ExecuteReader();
+                MySqlDataReader jeuEnr = maCde.ExecuteReader();
 
                 while (jeuEnr.Read())
                 {
@@ -189,7 +187,6 @@ namespace Atlantik
                 {
                     maCnx.Close();
                 }
-
             }
         }
 
@@ -207,10 +204,9 @@ namespace Atlantik
                 {
                     lvTraversees.Items.Clear(); //On clear le tableau
 
-                    string requete;
                     maCnx.Open();
 
-                    requete = "SELECT t.notraversee, t.dateheuredepart, b.nobateau, b.nom 'nombateau' FROM traversee t, bateau b WHERE t.nobateau = b.nobateau AND t.noliaison = @NOLIAISON AND t.dateheuredepart LIKE @DATE GROUP BY t.notraversee";
+                    string requete = "SELECT t.notraversee, t.dateheuredepart, b.nobateau, b.nom 'nombateau' FROM traversee t, bateau b WHERE t.nobateau = b.nobateau AND t.noliaison = @NOLIAISON AND t.dateheuredepart LIKE @DATE GROUP BY t.notraversee";
                     //on va chercher de quoi remplir les 3 premières colonnes (notraversee, heure de départ, nombateau) ainsi que le nobateau qui servira pour les catégories           en groupant par traversée (chaque traversée est unique)
                     var maCde = new MySqlCommand(requete, maCnx);
 
@@ -219,29 +215,35 @@ namespace Atlantik
 
                     MySqlDataReader jeuEnr = maCde.ExecuteReader();
 
-                    while (jeuEnr.Read()) //tant qu'on trouve une traversée
+                    if(jeuEnr.Read())
                     {
-                        var tabItem = new string[3 + tabCat.Length]; //tabItem pour l'insertion des données dans la listview
-
-                        tabItem[0] = jeuEnr["notraversee"].ToString(); //première colonne
-                        tabItem[1] = ((DateTime)jeuEnr["dateheuredepart"]).ToString("HH:mm"); //deuxième colonne
-                        tabItem[2] = jeuEnr["nombateau"].ToString(); //troisième colonne
-
-                        int x = 3; //incrémenteur
-
-                        foreach (Categorie cat in tabCat) //pour chaque catégorie dans la table des catégories
+                        while (jeuEnr.Read()) //tant qu'on trouve une traversée
                         {
-                            if(cat != null) //si la catégorie n'est pas vide
-                            {
-                                int difference = getCapaciteMaximale(jeuEnr.GetInt32("notraversee"), cat.GetLettre()) - getQuantiteEnregistree(jeuEnr.GetInt32("notraversee"), cat.GetLettre());
-                                //Différence entre capacitemax et quantiteenregistree
-                                tabItem[x] = difference.ToString();
-                                x += 1;
-                            }
-                        }
-                        ListViewItem Item = new ListViewItem(tabItem);
+                            var tabItem = new string[3 + tabCat.Length]; //tabItem pour l'insertion des données dans la listview
 
-                        lvTraversees.Items.Add(Item); //ajout de la ligne dans la listview
+                            tabItem[0] = jeuEnr["notraversee"].ToString(); //première colonne
+                            tabItem[1] = ((DateTime)jeuEnr["dateheuredepart"]).ToString("HH:mm"); //deuxième colonne
+                            tabItem[2] = jeuEnr["nombateau"].ToString(); //troisième colonne
+
+                            int x = 3; //incrémenteur
+
+                            foreach (Categorie cat in tabCat) //pour chaque catégorie dans la table des catégories
+                            {
+                                if (cat != null) //si la catégorie n'est pas vide
+                                {
+                                    int difference = getCapaciteMaximale(jeuEnr.GetInt32("notraversee"), cat.GetLettre()) - getQuantiteEnregistree(jeuEnr.GetInt32("notraversee"), cat.GetLettre());
+                                    //Différence entre capacitemax et quantiteenregistree
+                                    tabItem[x] = difference.ToString();
+                                    x += 1;
+                                }
+                            }
+                            ListViewItem Item = new ListViewItem(tabItem);
+                            lvTraversees.Items.Add(Item); //ajout de la ligne dans la listview
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Aucune donnée trouvée.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
                 catch (MySqlException e)
@@ -255,6 +257,10 @@ namespace Atlantik
                         maCnx.Close();
                     }
                 }
+            }
+            else
+            {
+                MessageBox.Show("Veuillez sélectionner une liaison.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }//btn
     }
