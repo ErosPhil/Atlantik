@@ -123,39 +123,43 @@ namespace Atlantik
 
         private void btnAjouterTraversee_Click(object sender, EventArgs ea)
         {
-            MySqlConnection maCnx;
-            maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
-
-            try
+            if ( cmbBateauAjouterTraversee.SelectedItem != null && cmbLiaisonAjouterTraversee.SelectedItem != null && lbxSecteursAjouterTraversee.SelectedItem != null && dateArrivee.Value > dateDepart.Value )
             {
-                string requete;
-                maCnx.Open();
-
-                requete = "INSERT INTO traversee(noliaison, nobateau, dateheuredepart, dateheurearrivee) VALUES(@NOLIAISON, @NOBATEAU, @DATEHEUREDEPART, @DATEHEUREARRIVEE)";
-
-                var maCde = new MySqlCommand(requete, maCnx);
-
-                maCde.Parameters.AddWithValue("@NOLIAISON", ((Liaison)cmbLiaisonAjouterTraversee.SelectedItem).GetNoLiaison());
-                maCde.Parameters.AddWithValue("@NOBATEAU", ((Bateau)cmbBateauAjouterTraversee.SelectedItem).GetNoBateau());
-                maCde.Parameters.AddWithValue("@DATEHEUREDEPART", DateTime.Parse(dateDepart.Value.ToString("yyyy-MM-dd HH:mm:ss")));
-                maCde.Parameters.AddWithValue("@DATEHEUREARRIVEE", DateTime.Parse(dateArrivee.Value.ToString("yyyy-MM-dd HH:mm:ss")));
-                MessageBox.Show(((Liaison)cmbLiaisonAjouterTraversee.SelectedItem).GetNoLiaison().ToString() + "\n" + ((Bateau)cmbBateauAjouterTraversee.SelectedItem).GetNoBateau().ToString() + "\n" + dateDepart.Value.ToString("yyyy-MM-dd HH:mm:ss") + "\n" + dateArrivee.Value.ToString("yyyy-MM-dd HH:mm:ss"), "a", MessageBoxButtons.OK);
-                maCde.ExecuteNonQuery();
-
-                MessageBox.Show("Ajout effectué", "Ajout d'une traversée", MessageBoxButtons.OK);
-            }
-            catch (MySqlException e)
-            {
-                MessageBox.Show("Erreur : " + e.ToString(), "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                if (maCnx is object & maCnx.State == ConnectionState.Open)
+                DialogResult retour = MessageBox.Show("Êtes-vous sûr de vouloir ajouter la traversée du bateau " + ((Bateau)cmbBateauAjouterTraversee.SelectedItem).ToString() + " effectuant la liaison " + ((Liaison)cmbLiaisonAjouterTraversee.SelectedItem).ToString() + " du secteur " + ((Secteur)lbxSecteursAjouterTraversee.SelectedItem).ToString() + " partant le " + dateDepart.Value + " et revenant le " + dateArrivee.Value + " ?", "Confirmation avant ajout", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                if (retour == DialogResult.Yes)
                 {
-                    maCnx.Close();
-                }
+                    MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
 
+                    try
+                    {
+                        maCnx.Open();
+
+                        string requete = "INSERT INTO traversee(noliaison, nobateau, dateheuredepart, dateheurearrivee) VALUES(@NOLIAISON, @NOBATEAU, @DATEHEUREDEPART, @DATEHEUREARRIVEE)";
+
+                        var maCde = new MySqlCommand(requete, maCnx);
+
+                        maCde.Parameters.AddWithValue("@NOLIAISON", ((Liaison)cmbLiaisonAjouterTraversee.SelectedItem).GetNoLiaison());
+                        maCde.Parameters.AddWithValue("@NOBATEAU", ((Bateau)cmbBateauAjouterTraversee.SelectedItem).GetNoBateau());
+                        maCde.Parameters.AddWithValue("@DATEHEUREDEPART", DateTime.Parse(dateDepart.Value.ToString("yyyy-MM-dd HH:mm:ss")));
+                        maCde.Parameters.AddWithValue("@DATEHEUREARRIVEE", DateTime.Parse(dateArrivee.Value.ToString("yyyy-MM-dd HH:mm:ss")));
+                        maCde.ExecuteNonQuery();
+
+                        MessageBox.Show("Ajout de la traversée effectué", "Confirmation après ajout", MessageBoxButtons.OK);
+                    }
+                    catch (MySqlException e)
+                    {
+                        MessageBox.Show("Erreur : " + e.ToString(), "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    finally
+                    {
+                        if (maCnx is object & maCnx.State == ConnectionState.Open)
+                        {
+                            maCnx.Close();
+                        }
+                    }
+                }
             }
+            else { MessageBox.Show("L'un des champs est vide ou incorrect", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
 
         private void cmbLiaisonAjouterTraversee_SelectedIndexChanged(object sender, EventArgs e)
