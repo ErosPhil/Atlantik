@@ -136,7 +136,7 @@ namespace Atlantik
 
         private void btnModifierBateau_Click(object sender, EventArgs ea)
         {
-            var Textboxes = gbxCapMaxModifierBateau.Controls.OfType<TextBox>(); //on va chercher toutes les textbox des catégories dans la groupbox
+            var Textboxes = gbxCapMaxModifierBateau.Controls.OfType<TextBox>();
             bool vide = false;
             foreach (TextBox tbx in Textboxes)
             {
