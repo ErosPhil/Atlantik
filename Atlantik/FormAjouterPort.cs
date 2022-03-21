@@ -28,7 +28,10 @@ namespace Atlantik
         
         private void btnAjouterPort_Click(object sender, EventArgs ea)
         {
-            if (tbxNomPort.Text != "")
+            var objetRegEx = new Regex("^[a-zA-Zéèêëçàâôù ûïî-]*$");
+            var test = objetRegEx.Match(tbxNomPort.Text);
+
+            if (test.Success && tbxNomPort.Text != "")
             {
                 DialogResult retour = MessageBox.Show("Êtes-vous sûr de vouloir ajouter le port " + tbxNomPort.Text + " ?", "Confirmation avant ajout", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
                 if (retour == DialogResult.Yes)

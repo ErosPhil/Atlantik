@@ -15,8 +15,6 @@ namespace Atlantik
 {
     public partial class FormModifierParametresSite : Form
     {
-        MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
-
         public FormModifierParametresSite()
         {
             InitializeComponent();
@@ -49,6 +47,8 @@ namespace Atlantik
             gbxIdentifiants.Controls.Add(labelCleHMAC);
 
             MySqlDataReader jeuEnr = null;
+            MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
+
             try
             {
                 maCnx.Open();
@@ -59,7 +59,7 @@ namespace Atlantik
 
                 jeuEnr = maCde.ExecuteReader();
 
-                if(jeuEnr.Read())
+                if (jeuEnr.Read())
                 {
                     TextBox textboxSite = new TextBox();
                     textboxSite.Name = "tbxSite";
@@ -114,37 +114,57 @@ namespace Atlantik
 
         private void btnModifierParametresSite_Click(object sender, EventArgs ea)
         {
-            try
+            var Textboxes = gbxIdentifiants.Controls.OfType<TextBox>();
+            bool vide = false;
+            foreach (TextBox tbx in Textboxes)
             {
-                maCnx.Open();
-
-                string requete = "UPDATE parametres SET site_pb = @SITEPB AND rang_pb = @RANGPB AND identifiant_pb = @IDENTIFIANTPB AND clehmac_pb = @CLEHMACPB AND enproduction = @ENPRODUCTION AND melsite = @MELSITE WHERE noidentifiant = @NOIDENTIFIANT";
-
-                var maCde = new MySqlCommand(requete, maCnx);
-
-                maCde.Parameters.AddWithValue("@NOIDENTIFIANT", 160);
-
-                var Textboxes = gbxIdentifiants.Controls.OfType<TextBox>();
-
-                foreach(TextBox tbx in Textboxes)
+                var objetRegEx = new Regex(@"^*[0-9]+$");
+                if (tbx.Name == "tbxCleHMAC")
                 {
-                    maCde.Parameters.AddWithValue(tbx.Tag.ToString(), tbx.Text);
+                    objetRegEx = new Regex(@"^*[0-9a-zA-Z]+$");
                 }
-                maCde.Parameters.AddWithValue("@ENPRODUCTION", cbxEnProduction.Checked);
-                maCde.Parameters.AddWithValue("@MELSITE", tbxMelSite.Text);
-                maCde.ExecuteNonQuery();
+                var test = objetRegEx.Match(tbx.Text);
+                if (tbx.Text == "" || !test.Success) { vide = true; }
             }
-            catch (MySqlException e)
+
+            if (tbxMelSite.Text != "" && vide == false)
             {
-                MessageBox.Show("Erreur : " + e.ToString(), "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                if (maCnx is object & maCnx.State == ConnectionState.Open)
+                DialogResult retour = MessageBox.Show("Êtes-vous sûr de vouloir modifier les paramètres du site ?", "Confirmation avant modification", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                if (retour == DialogResult.Yes)
                 {
-                    maCnx.Close();
+                    MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
+                    try
+                    {
+                        maCnx.Open();
+
+                        string requete = "UPDATE parametres SET site_pb = @SITEPB AND rang_pb = @RANGPB, identifiant_pb = @IDENTIFIANTPB, clehmac_pb = @CLEHMACPB, enproduction = @ENPRODUCTION, melsite = @MELSITE WHERE noidentifiant = @NOIDENTIFIANT";
+
+                        var maCde = new MySqlCommand(requete, maCnx);
+
+                        maCde.Parameters.AddWithValue("@NOIDENTIFIANT", 160);
+
+                        foreach (TextBox tbx in Textboxes)
+                        {
+                            maCde.Parameters.AddWithValue(tbx.Tag.ToString(), tbx.Text);
+                        }
+                        maCde.Parameters.AddWithValue("@ENPRODUCTION", cbxEnProduction.Checked);
+                        maCde.Parameters.AddWithValue("@MELSITE", tbxMelSite.Text);
+                        maCde.ExecuteNonQuery();
+                    }
+                    catch (MySqlException e)
+                    {
+                        MessageBox.Show("Erreur : " + e.ToString(), "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    finally
+                    {
+                        if (maCnx is object & maCnx.State == ConnectionState.Open)
+                        {
+                            maCnx.Close();
+                        }
+                    }
                 }
             }
+            else { MessageBox.Show("L'un des champs est vide ou incorrect", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
     }
 }
