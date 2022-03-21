@@ -48,7 +48,7 @@ namespace Atlantik
 
                         tbxNomPort.Clear();
 
-                        MessageBox.Show("Ajout effectué", "Confirmation après ajout", MessageBoxButtons.OK);
+                        MessageBox.Show("Ajout du port effectué", "Confirmation après ajout", MessageBoxButtons.OK);
                     }
                     catch (MySqlException e)
                     {
