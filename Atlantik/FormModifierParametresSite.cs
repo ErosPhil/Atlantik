@@ -148,6 +148,9 @@ namespace Atlantik
                         maCde.Parameters.AddWithValue("@ENPRODUCTION", cbxEnProduction.Checked);
                         maCde.Parameters.AddWithValue("@MELSITE", tbxMelSite.Text);
                         maCde.ExecuteNonQuery();
+
+                        MessageBox.Show("Modification des paramètres du site", "Confirmation après modification", MessageBoxButtons.OK);
+
                     }
                     catch (MySqlException e)
                     {
@@ -162,6 +165,7 @@ namespace Atlantik
                     }
                 }
             }
+            else { MessageBox.Show("L'un des champs est vide ou incorrect", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
     }
 }
