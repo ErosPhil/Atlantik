@@ -203,7 +203,6 @@ namespace Atlantik
                         {
                             maCnx.Close();
                         }
-
                     }
                 }
             }

@@ -129,7 +129,6 @@ namespace Atlantik
                 if (retour == DialogResult.Yes)
                 {
                     MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
-
                     try
                     {
                         maCnx.Open();
