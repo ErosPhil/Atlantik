@@ -188,7 +188,6 @@ namespace Atlantik
                             labelReglement.Text = "Réglé par " + jeuEnr["modereglement"].ToString();
                         }
                     }
-
                     gbxDetailsReservation.Controls.Add(labelReglement);
                 }
                 catch (MySqlException e)
@@ -202,9 +201,7 @@ namespace Atlantik
                         maCnx.Close();
                     }
                 }
-
-            }//if
-            
+            }
         }
     }
 }

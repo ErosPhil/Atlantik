@@ -82,7 +82,7 @@ namespace Atlantik
 
             if (tbxNomAjouterBateau.Text != "" && vide == false)
             {
-                DialogResult retour = MessageBox.Show("Êtes-vous sûr de vouloir insérer le bateau " + tbxNomAjouterBateau.Text + " ?", "Confirmation avant ajout", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                DialogResult retour = MessageBox.Show("Êtes-vous sûr de vouloir ajouter le bateau " + tbxNomAjouterBateau.Text + " ?", "Confirmation avant ajout", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
                 if (retour == DialogResult.Yes)
                 {
                     MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
