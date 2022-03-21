@@ -112,7 +112,6 @@ namespace Atlantik
                 {
                     maCnx.Close();
                 }
-
             }
         }
 
@@ -141,8 +140,8 @@ namespace Atlantik
                         maCde.Parameters.AddWithValue("@NOBATEAU", ((Bateau)cmbBateauAjouterTraversee.SelectedItem).GetNoBateau());
                         maCde.Parameters.AddWithValue("@DATEHEUREDEPART", DateTime.Parse(dateDepart.Value.ToString("yyyy-MM-dd HH:mm:ss")));
                         maCde.Parameters.AddWithValue("@DATEHEUREARRIVEE", DateTime.Parse(dateArrivee.Value.ToString("yyyy-MM-dd HH:mm:ss")));
+                        
                         maCde.ExecuteNonQuery();
-
                         MessageBox.Show("Ajout de la traversée effectué", "Confirmation après ajout", MessageBoxButtons.OK);
                     }
                     catch (MySqlException e)

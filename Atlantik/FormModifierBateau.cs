@@ -62,7 +62,6 @@ namespace Atlantik
                 {
                     maCnx.Close();
                 }
-
             }
         }
 

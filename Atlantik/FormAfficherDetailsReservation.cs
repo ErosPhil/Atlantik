@@ -87,7 +87,6 @@ namespace Atlantik
                     tabItem[2] = jeuEnr["notraversee"].ToString();
                     tabItem[3] = ((DateTime)jeuEnr["dateheuredepart"]).ToString("dd/MM/yyyy") + " à " + ((DateTime)jeuEnr["dateheuredepart"]).ToString("HH") + "h" + ((DateTime)jeuEnr["dateheuredepart"]).ToString("mm");
 
-                    //MessageBox.Show(jeuEnr["noreservation"].ToString() + jeuEnr["nomport_depart"].ToString() + jeuEnr["nomport_arrivee"].ToString() + jeuEnr["notraversee"].ToString());
                     ListViewItem Item = new ListViewItem(tabItem);
                     lvReservations.Items.Add(Item);
                 }
@@ -116,6 +115,7 @@ namespace Atlantik
 
                     string requete = "SELECT t.libelle, e.quantite FROM type t, enregistrer e WHERE e.lettrecategorie = t.lettrecategorie AND e.notype = t.notype AND noreservation = @NORESERVATION";
                     //requête qui va chercher les éléments à afficher dans la listview des réservations
+
                     var maCde = new MySqlCommand(requete, maCnx);
 
                     maCde.Parameters.AddWithValue("@NORESERVATION", lvReservations.SelectedItems[0].SubItems[0].Text);

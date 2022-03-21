@@ -109,7 +109,6 @@ namespace Atlantik
                     maCnx.Close();
                 }
             }
-
         }
 
         private void btnModifierParametresSite_Click(object sender, EventArgs ea)

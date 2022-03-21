@@ -23,9 +23,11 @@ namespace Atlantik
         private Categorie[] tabCat = new Categorie[10]; //tableau contenant les catégories chargées à l'ouverture de la fenêtre
 
         private int getQuantiteEnregistree(int notraversee, string lettrecategorie)
-        {
+        {// fonction qui pour un notraversee et une lettrecategorie retourne le nb de places enregistrées (dans les enregistrements de cette traversée)
+
+            MySqlDataReader jeuEnr = null;
             MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
-            // fonction qui pour un notraversee et une lettrecategorie retourne le nb de places enregistrées (dans les enregistrements de cette traversée)
+            
             try
             {
                 maCnx.Open();
@@ -36,7 +38,7 @@ namespace Atlantik
                 maCde.Parameters.AddWithValue("@NOTRAVERSEE", notraversee);
                 maCde.Parameters.AddWithValue("@LETTRECATEGORIE", lettrecategorie);
 
-                MySqlDataReader jeuEnr = maCde.ExecuteReader();
+                jeuEnr = maCde.ExecuteReader();
 
                 jeuEnr.Read();
 
@@ -63,6 +65,8 @@ namespace Atlantik
 
         private int getCapaciteMaximale(int notraversee, string lettrecategorie)
         {// fonction qui pour un notraversee et une lettrecategorie retourne le nb de places maximales (dans la catégorie en question par rapport au bateau de la traversée)
+
+            MySqlDataReader jeuEnr = null;
             MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
 
             try
@@ -75,7 +79,7 @@ namespace Atlantik
                 maCde.Parameters.AddWithValue("@NOTRAVERSEE", notraversee);
                 maCde.Parameters.AddWithValue("@LETTRECATEGORIE", lettrecategorie);
 
-                MySqlDataReader jeuEnr = maCde.ExecuteReader();
+                jeuEnr = maCde.ExecuteReader();
 
                 if(jeuEnr.Read())
                 {
@@ -107,6 +111,8 @@ namespace Atlantik
             lvTraversees.Columns.Add("Heure", 50); //
             lvTraversees.Columns.Add("Bateau", 75); //
             dateDateAfficherTraversees.Value = DateTime.Now; //Actualise la valeur par défaut du calendrier à celle d'aujourd'hui
+
+            MySqlDataReader jeuEnr = null;
             MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
             try
             {
@@ -116,7 +122,7 @@ namespace Atlantik
 
                 var maCde = new MySqlCommand(requete, maCnx);
 
-                MySqlDataReader jeuEnr = maCde.ExecuteReader();
+                jeuEnr = maCde.ExecuteReader();
 
                 int x = 0; //compteur d'incrémentation
 
@@ -158,6 +164,7 @@ namespace Atlantik
         private void lbxSecteursAfficherTraversees_SelectedIndexChanged(object sender, EventArgs ea) //Quand l'index de secteur sélectionné change
         {
             cmbLiaisonAfficherTraversees.Items.Clear();
+            MySqlDataReader jeuEnr = null;
             MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
             try
             {
@@ -169,7 +176,7 @@ namespace Atlantik
 
                 maCde.Parameters.AddWithValue("@NOSECTEUR", ((Secteur)lbxSecteursAfficherTraversees.SelectedItem).GetNoSecteur());
 
-                MySqlDataReader jeuEnr = maCde.ExecuteReader();
+                jeuEnr = maCde.ExecuteReader();
 
                 while (jeuEnr.Read())
                 {
@@ -199,6 +206,7 @@ namespace Atlantik
         {
             if (cmbLiaisonAfficherTraversees.SelectedItem != null)
             {
+                MySqlDataReader jeuEnr = null;
                 MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
                 try
                 {
@@ -208,12 +216,13 @@ namespace Atlantik
 
                     string requete = "SELECT t.notraversee, t.dateheuredepart, b.nobateau, b.nom 'nombateau' FROM traversee t, bateau b WHERE t.nobateau = b.nobateau AND t.noliaison = @NOLIAISON AND t.dateheuredepart LIKE @DATE GROUP BY t.notraversee";
                     //on va chercher de quoi remplir les 3 premières colonnes (notraversee, heure de départ, nombateau) ainsi que le nobateau qui servira pour les catégories           en groupant par traversée (chaque traversée est unique)
+
                     var maCde = new MySqlCommand(requete, maCnx);
 
                     maCde.Parameters.AddWithValue("@NOLIAISON", ((Liaison)cmbLiaisonAfficherTraversees.SelectedItem).GetNoLiaison()); //no liaison de la liaison sélectionnée
                     maCde.Parameters.AddWithValue("@DATE", dateDateAfficherTraversees.Value.ToString("yyyy-MM-dd") + "%"); //date choisie
 
-                    MySqlDataReader jeuEnr = maCde.ExecuteReader();
+                    jeuEnr = maCde.ExecuteReader();
 
                     if(jeuEnr.Read())
                     {

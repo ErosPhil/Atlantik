@@ -22,6 +22,7 @@ namespace Atlantik
 
         private void FormAjouterBateau_Load(object sender, EventArgs ea)
         {
+            MySqlDataReader jeuEnr = null;
             MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
             try
             {
@@ -31,7 +32,7 @@ namespace Atlantik
 
                 var maCde = new MySqlCommand(requete, maCnx);
 
-                MySqlDataReader jeuEnr = maCde.ExecuteReader();
+                jeuEnr = maCde.ExecuteReader();
 
                 int i = 0; //incrémenteur
 

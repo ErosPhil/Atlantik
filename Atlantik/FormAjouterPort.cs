@@ -25,7 +25,6 @@ namespace Atlantik
 
         }
 
-        
         private void btnAjouterPort_Click(object sender, EventArgs ea)
         {
             var objetRegEx = new Regex("^[a-zA-Zéèêëçàâôù ûïî-]*$");
