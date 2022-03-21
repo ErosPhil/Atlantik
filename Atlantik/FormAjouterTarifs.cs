@@ -167,7 +167,7 @@ namespace Atlantik
 
             if (cmbLiaisonAjouterTarifs.SelectedItem != null && cmbPeriodeAjouterTarifs.SelectedItem != null && lbxSecteursAjouterTarifs.SelectedItem != null && vide == false)
             {
-                DialogResult retour = MessageBox.Show("Êtes-vous sûr de vouloir ajouter les tarifs entrés pour la liaison " + ((Liaison)cmbLiaisonAjouterTarifs.SelectedItem).ToString() + " du secteur " + ((Secteur)lbxSecteursAjouterTarifs.SelectedItem).ToString() + " pour la période du  " + ((Periode)cmbPeriodeAjouterTarifs.SelectedItem).ToString() + " ?", "Confirmation avant ajout", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                DialogResult retour = MessageBox.Show("Êtes-vous sûr de vouloir ajouter les tarifs entrés pour la liaison " + ((Liaison)cmbLiaisonAjouterTarifs.SelectedItem).ToString() + " du secteur " + ((Secteur)lbxSecteursAjouterTarifs.SelectedItem).ToString() + " pour la période du " + ((Periode)cmbPeriodeAjouterTarifs.SelectedItem).ToString() + " ?", "Confirmation avant ajout", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
                 if (retour == DialogResult.Yes)
                 {
                     MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
@@ -207,7 +207,7 @@ namespace Atlantik
                     }
                 }
             }
-            MessageBox.Show("Ajout effectué", "Confirmation après ajout", MessageBoxButtons.OK);
+            else { MessageBox.Show("L'un des champs est vide ou incorrect", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
     }
 }

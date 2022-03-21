@@ -69,8 +69,8 @@ namespace Atlantik
                         }
                     }
                 }
-                else { MessageBox.Show("L'un des champs est vide ou incorrect", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error); }
             }
+            else { MessageBox.Show("L'un des champs est vide ou incorrect", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
     }
 }
