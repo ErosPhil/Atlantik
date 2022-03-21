@@ -262,6 +262,6 @@ namespace Atlantik
             {
                 MessageBox.Show("Veuillez sélectionner une liaison.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-        }//btn
+        }
     }
 }

@@ -28,57 +28,47 @@ namespace Atlantik
         
         private void btnAjouterPort_Click(object sender, EventArgs ea)
         {
-            var objetRegEx = new Regex("^[a-zA-Zéèêëçàâôù ûïî]*$"); //test : on vérifie bien que l'on a un string conforme dans la case
-            var test = objetRegEx.Match(tbxNomPort.Text);
-
-            if (test.Success && tbxNomPort.Text != "")
+            if (tbxNomPort.Text != "")
             {
-                MySqlConnection maCnx;
-                maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
-
-                try
+                DialogResult retour = MessageBox.Show("Êtes-vous sûr de vouloir ajouter le port " + tbxNomPort.Text + " ?", "Confirmation avant ajout", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                if (retour == DialogResult.Yes)
                 {
-                    string requete;
-                    maCnx.Open(); // on se connecte
-
-                    requete = "INSERT INTO port(nom) VALUES (@NOMPORT)";
-
-                    var maCde = new MySqlCommand(requete, maCnx);
-
-                    maCde.Parameters.AddWithValue("@NOMPORT", tbxNomPort.Text);
-
-                    maCde.ExecuteNonQuery();
-
-                    tbxNomPort.Clear();
-                }
-                catch (MySqlException e)
-                {
-                    MessageBox.Show("Erreur : " + e.ToString(), "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally
-                {
-                    if (maCnx is object & maCnx.State == ConnectionState.Open)
+                    MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
+                    try
                     {
-                        maCnx.Close();
-                    }
+                        maCnx.Open();
 
+                        string requete = "INSERT INTO port(nom) VALUES (@NOMPORT)";
+
+                        var maCde = new MySqlCommand(requete, maCnx);
+
+                        maCde.Parameters.AddWithValue("@NOMPORT", tbxNomPort.Text);
+
+                        maCde.ExecuteNonQuery();
+
+                        tbxNomPort.Clear();
+
+                        MessageBox.Show("Ajout effectué", "Confirmation après ajout", MessageBoxButtons.OK);
+                    }
+                    catch (MySqlException e)
+                    {
+                        MessageBox.Show("Erreur : " + e.ToString(), "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    finally
+                    {
+                        if (maCnx is object & maCnx.State == ConnectionState.Open)
+                        {
+                            maCnx.Close();
+                        }
+                    }
                 }
             }
+            else { MessageBox.Show("L'un des champs est vide ou incorrect", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
 
         private void tbxNomPort_TextChanged(object sender, EventArgs e)
         {
-            var objetRegEx = new Regex("^[a-zA-Zéèêëçàâôù ûïî]*$"); //que les majuscules et minuscules classiques et les minuscules avec accent
-            var test = objetRegEx.Match(tbxNomPort.Text);
-
-            if (!test.Success)
-            {
-                tbxNomPort.BackColor = Color.Red;
-            }
-            else
-            {
-                tbxNomPort.BackColor = Color.White;
-            }
+            
         }
     }
 }
