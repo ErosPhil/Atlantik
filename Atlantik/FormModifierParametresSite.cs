@@ -15,8 +15,6 @@ namespace Atlantik
 {
     public partial class FormModifierParametresSite : Form
     {
-        MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
-
         public FormModifierParametresSite()
         {
             InitializeComponent();
@@ -49,6 +47,8 @@ namespace Atlantik
             gbxIdentifiants.Controls.Add(labelCleHMAC);
 
             MySqlDataReader jeuEnr = null;
+            MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
+
             try
             {
                 maCnx.Open();
@@ -59,7 +59,7 @@ namespace Atlantik
 
                 jeuEnr = maCde.ExecuteReader();
 
-                if(jeuEnr.Read())
+                if (jeuEnr.Read())
                 {
                     TextBox textboxSite = new TextBox();
                     textboxSite.Name = "tbxSite";
@@ -114,13 +114,34 @@ namespace Atlantik
 
         private void btnModifierParametresSite_Click(object sender, EventArgs ea)
         {
-            try
+            var Textboxes = gbxIdentifiants.Controls.OfType<TextBox>();
+            bool vide = false;
+            foreach (TextBox tbx in Textboxes)
             {
-                maCnx.Open();
+                var objetRegEx = new Regex(@"^*[0-9]+$");
+                if (tbx.Name == "tbxCleHMAC")
+                {
+                    objetRegEx = new Regex(@"^*[0-9a-zA-Z]+$");
+                }
+                var test = objetRegEx.Match(tbx.Text);
+                if (tbx.Text == "" || !test.Success) { vide = true; }
+            }
 
-                string requete = "UPDATE parametres SET site_pb = @SITEPB, rang_pb = @RANGPB, identifiant_pb = @IDENTIFIANTPB, clehmac_pb = @CLEHMACPB, enproduction = @ENPRODUCTION, melsite = @MELSITE WHERE noidentifiant = 160";
+            if (tbxMelSite.Text != "" && vide == false)
+            {
+                DialogResult retour = MessageBox.Show("Êtes-vous sûr de vouloir modifier les paramètres du site ?", "Confirmation avant modification", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                if (retour == DialogResult.Yes)
+                {
+                    MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
+                    try
+                    {
+                        maCnx.Open();
 
-                var maCde = new MySqlCommand(requete, maCnx);
+                        string requete = "UPDATE parametres SET site_pb = @SITEPB AND rang_pb = @RANGPB, identifiant_pb = @IDENTIFIANTPB, clehmac_pb = @CLEHMACPB, enproduction = @ENPRODUCTION, melsite = @MELSITE WHERE noidentifiant = @NOIDENTIFIANT";
+
+                        var maCde = new MySqlCommand(requete, maCnx);
+
+                maCde.Parameters.AddWithValue("@NOIDENTIFIANT", 160);
 
                 var Textboxes = gbxIdentifiants.Controls.OfType<TextBox>();
 

@@ -136,40 +136,54 @@ namespace Atlantik
 
         private void btnModifierBateau_Click(object sender, EventArgs ea)
         {
-            MySqlConnection maCnx;
-            maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
-            try
+            var Textboxes = gbxCapMaxModifierBateau.Controls.OfType<TextBox>(); //on va chercher toutes les textbox des catégories dans la groupbox
+            bool vide = false;
+            foreach (TextBox tbx in Textboxes)
             {
-                maCnx.Open();
+                var objetRegEx = new Regex(@"^*[0-9]+$");
+                var test = objetRegEx.Match(tbx.Text);
 
-                string requete = "UPDATE contenir SET capacitemax = @CAPACITEMAX WHERE nobateau = @NOBATEAU AND lettrecategorie = @LETTRECATEGORIE";
+                if (tbx.Text == "" || !test.Success) { vide = true; }
+            }
 
-                var maCde = new MySqlCommand(requete, maCnx);
-
-                var Textboxes = gbxCapMaxModifierBateau.Controls.OfType<TextBox>();
-
-                foreach (TextBox tbx in Textboxes)
+            if (cbxModifierBateau.SelectedItem != null && vide == false)
+            {
+                DialogResult retour = MessageBox.Show("Êtes-vous sûr de vouloir modifier le bateau " + ((Bateau)cbxModifierBateau.SelectedItem).ToString() + " ?", "Confirmation avant modification", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                if (retour == DialogResult.Yes)
                 {
-                    maCde.Parameters.AddWithValue("@CAPACITEMAX", tbx.Text);
-                    maCde.Parameters.AddWithValue("@NOBATEAU", ((Bateau)cbxModifierBateau.SelectedItem).GetNoBateau());
-                    maCde.Parameters.AddWithValue("@LETTRECATEGORIE", tbx.Tag);
-                    maCde.ExecuteNonQuery();
-                    maCde.Parameters.Clear();
-                }
-                MessageBox.Show("Modification effectuée", "Modification d'un bateau", MessageBoxButtons.OK);
-            }
-            catch (MySqlException e)
-            {
-                MessageBox.Show("Erreur : " + e.ToString(), "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                if (maCnx is object & maCnx.State == ConnectionState.Open)
-                {
-                    maCnx.Close();
-                }
+                    MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
+                    try
+                    {
+                        maCnx.Open();
 
+                requete = "UPDATE contenir SET capacitemax = @CAPACITEMAX WHERE nobateau = @NOBATEAU AND lettrecategorie = @LETTRECATEGORIE";
+
+                        var maCde = new MySqlCommand(requete, maCnx);
+
+                        foreach (TextBox tbx in Textboxes)
+                        {
+                            maCde.Parameters.AddWithValue("@CAPACITEMAX", tbx.Text);
+                            maCde.Parameters.AddWithValue("@NOBATEAU", ((Bateau)cbxModifierBateau.SelectedItem).GetNoBateau());
+                            maCde.Parameters.AddWithValue("@LETTRECATEGORIE", tbx.Tag);
+                            maCde.ExecuteNonQuery();
+                            maCde.Parameters.Clear();
+                        }
+                        MessageBox.Show("Modification des tarifs du bateau effectuée", "Confirmation après modification", MessageBoxButtons.OK);
+                    }
+                    catch (MySqlException e)
+                    {
+                        MessageBox.Show("Erreur : " + e.ToString(), "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    finally
+                    {
+                        if (maCnx is object & maCnx.State == ConnectionState.Open)
+                        {
+                            maCnx.Close();
+                        }
+                    }
+                }
             }
+            else { MessageBox.Show("L'un des champs est vide ou incorrect", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
     }
 }

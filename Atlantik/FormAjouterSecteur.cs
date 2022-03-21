@@ -32,7 +32,7 @@ namespace Atlantik
 
         private void btnAjouterSecteur_Click_1(object sender, EventArgs ea)
         {
-            var objetRegEx = new Regex("^[a-zA-Zéèêëçàâôù ûïî]*$");
+            var objetRegEx = new Regex("^[a-zA-Zéèêëçàâôù ûïî-]*$");
             var test = objetRegEx.Match(tbxNomSecteur.Text);
 
             if (test.Success && tbxNomSecteur.Text != "")
