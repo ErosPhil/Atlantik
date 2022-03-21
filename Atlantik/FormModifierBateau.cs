@@ -155,7 +155,7 @@ namespace Atlantik
                     {
                         maCnx.Open();
 
-                        string requete = "UPDATE contenir SET capacitemax = @CAPACITEMAX WHERE nobateau = @NOBATEAU AND lettrecategorie = @LETTRECATEGORIE";
+                requete = "UPDATE contenir SET capacitemax = @CAPACITEMAX WHERE nobateau = @NOBATEAU AND lettrecategorie = @LETTRECATEGORIE";
 
                         var maCde = new MySqlCommand(requete, maCnx);
 

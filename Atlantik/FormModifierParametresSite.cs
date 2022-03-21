@@ -139,27 +139,27 @@ namespace Atlantik
 
                         var maCde = new MySqlCommand(requete, maCnx);
 
-                        maCde.Parameters.AddWithValue("@NOIDENTIFIANT", 160);
+                maCde.Parameters.AddWithValue("@NOIDENTIFIANT", 160);
 
-                        foreach (TextBox tbx in Textboxes)
-                        {
-                            maCde.Parameters.AddWithValue(tbx.Tag.ToString(), tbx.Text);
-                        }
-                        maCde.Parameters.AddWithValue("@ENPRODUCTION", cbxEnProduction.Checked);
-                        maCde.Parameters.AddWithValue("@MELSITE", tbxMelSite.Text);
-                        maCde.ExecuteNonQuery();
-                    }
-                    catch (MySqlException e)
-                    {
-                        MessageBox.Show("Erreur : " + e.ToString(), "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    finally
-                    {
-                        if (maCnx is object & maCnx.State == ConnectionState.Open)
-                        {
-                            maCnx.Close();
-                        }
-                    }
+                var Textboxes = gbxIdentifiants.Controls.OfType<TextBox>();
+
+                foreach(TextBox tbx in Textboxes)
+                {
+                    maCde.Parameters.AddWithValue(tbx.Tag.ToString(), tbx.Text);
+                }
+                maCde.Parameters.AddWithValue("@ENPRODUCTION", cbxEnProduction.Checked);
+                maCde.Parameters.AddWithValue("@MELSITE", tbxMelSite.Text);
+                maCde.ExecuteNonQuery();
+            }
+            catch (MySqlException e)
+            {
+                MessageBox.Show("Erreur : " + e.ToString(), "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (maCnx is object & maCnx.State == ConnectionState.Open)
+                {
+                    maCnx.Close();
                 }
             }
         }
