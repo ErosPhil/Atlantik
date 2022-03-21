@@ -95,7 +95,7 @@ namespace Atlantik
 
                         tbxDistance.Clear();
 
-                        MessageBox.Show("Ajout effectué", "Confirmation après ajout", MessageBoxButtons.OK);
+                        MessageBox.Show("Ajout de la liaison effectué", "Confirmation après ajout", MessageBoxButtons.OK);
                     }
                     catch (MySqlException e)
                     {

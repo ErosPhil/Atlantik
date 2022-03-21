@@ -23,15 +23,13 @@ namespace Atlantik
         private void FormAjouterTarifs_Load(object sender, EventArgs ea)
         {
             MySqlDataReader jeuEnr = null;
-            MySqlConnection maCnx;
-            maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
+            MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
 
             try
             {
-                string requete;
                 maCnx.Open();
 
-                requete = "SELECT * FROM periode";
+                string requete = "SELECT * FROM periode";
 
                 var maCde = new MySqlCommand(requete, maCnx);
 
@@ -102,7 +100,6 @@ namespace Atlantik
                     gbxTarifsCategorieType.Controls.Add(textbox);
                     i++;
                 }
-
             }
             catch (MySqlException e)
             {
@@ -122,16 +119,14 @@ namespace Atlantik
         {
             cmbLiaisonAjouterTarifs.Items.Clear();
             MySqlDataReader jeuEnr = null;
-            MySqlConnection maCnx;
-            maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
-
+            MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
             try
             {
-                string requete;
                 maCnx.Open();
 
-                requete = "SELECT l.noliaison, l.nosecteur, pd.nom 'nomport_depart', pa.nom 'nomport_arrivee', l.distance FROM liaison l, port pd, port pa WHERE l.noport_depart = pd.noport AND l.noport_arrivee = pa.noport AND nosecteur = @NOSECTEUR";
+                string requete = "SELECT l.noliaison, l.nosecteur, pd.nom 'nomport_depart', pa.nom 'nomport_arrivee', l.distance FROM liaison l, port pd, port pa WHERE l.noport_depart = pd.noport AND l.noport_arrivee = pa.noport AND nosecteur = @NOSECTEUR";
                 //requete qui va chercher les informations essentielles d'une traversée (dont le nom des ports de départ et arrivée)
+
                 var maCde = new MySqlCommand(requete, maCnx);
 
                 maCde.Parameters.AddWithValue("@NOSECTEUR", ((Secteur)lbxSecteursAjouterTarifs.SelectedItem).GetNoSecteur());
@@ -160,45 +155,59 @@ namespace Atlantik
 
         private void btnAjouterTarifs_Click(object sender, EventArgs ea)
         {
-            MySqlConnection maCnx;
-            maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
-            try
+            var Textboxes = gbxTarifsCategorieType.Controls.OfType<TextBox>();
+            bool vide = false;
+            foreach (TextBox tbx in Textboxes)
             {
-                string requete;
-                maCnx.Open();
+                var objetRegEx = new Regex(@"^*[0-9]+$");
+                var test = objetRegEx.Match(tbx.Text);
 
-                requete = "INSERT INTO tarifer(noperiode, lettrecategorie, notype, noliaison, tarif) VALUES(@NOPERIODE, @LETTRECATEGORIE, @NOTYPE, @NOLIAISON, @TARIF)";
+                if (tbx.Text == "" || !test.Success) { vide = true; }
+            }
 
-                var maCde = new MySqlCommand(requete, maCnx);
-
-                var Textboxes = gbxTarifsCategorieType.Controls.OfType<TextBox>();
-
-                foreach (TextBox tbx in Textboxes)
+            if (cmbLiaisonAjouterTarifs.SelectedItem != null && cmbPeriodeAjouterTarifs.SelectedItem != null && lbxSecteursAjouterTarifs.SelectedItem != null && vide == false)
+            {
+                DialogResult retour = MessageBox.Show("Êtes-vous sûr de vouloir ajouter les tarifs entrés pour la liaison " + ((Liaison)cmbLiaisonAjouterTarifs.SelectedItem).ToString() + " du secteur " + ((Secteur)lbxSecteursAjouterTarifs.SelectedItem).ToString() + " pour la période du  " + ((Periode)cmbPeriodeAjouterTarifs.SelectedItem).ToString() + " ?", "Confirmation avant ajout", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                if (retour == DialogResult.Yes)
                 {
-                    maCde.Parameters.AddWithValue("@NOPERIODE", ((Periode)cmbPeriodeAjouterTarifs.SelectedItem).GetNoPeriode());
-                    maCde.Parameters.AddWithValue("@LETTRECATEGORIE", ((CategorieType)tbx.Tag).GetLettreCategorie());
-                    maCde.Parameters.AddWithValue("@NOTYPE", ((CategorieType)tbx.Tag).GetNoType());
-                    maCde.Parameters.AddWithValue("@NOLIAISON", ((Liaison)cmbLiaisonAjouterTarifs.SelectedItem).GetNoLiaison());
-                    maCde.Parameters.AddWithValue("@TARIF", tbx.Text);
+                    MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
+                    try
+                    {
+                        maCnx.Open();
 
-                    maCde.ExecuteNonQuery();
-                    maCde.Parameters.Clear();
-                    tbx.Clear();
-                }
-                MessageBox.Show("Ajouts effectués", "Ajouts de Tarifs", MessageBoxButtons.OK);
-            }
-            catch (MySqlException e)
-            {
-                MessageBox.Show("Erreur : " + e.ToString(), "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                if (maCnx is object & maCnx.State == ConnectionState.Open)
-                {
-                    maCnx.Close();
-                }
+                        string requete = "INSERT INTO tarifer(noperiode, lettrecategorie, notype, noliaison, tarif) VALUES(@NOPERIODE, @LETTRECATEGORIE, @NOTYPE, @NOLIAISON, @TARIF)";
 
+                        var maCde = new MySqlCommand(requete, maCnx);
+
+                        foreach (TextBox tbx in Textboxes)
+                        {
+                            maCde.Parameters.AddWithValue("@NOPERIODE", ((Periode)cmbPeriodeAjouterTarifs.SelectedItem).GetNoPeriode());
+                            maCde.Parameters.AddWithValue("@LETTRECATEGORIE", ((CategorieType)tbx.Tag).GetLettreCategorie());
+                            maCde.Parameters.AddWithValue("@NOTYPE", ((CategorieType)tbx.Tag).GetNoType());
+                            maCde.Parameters.AddWithValue("@NOLIAISON", ((Liaison)cmbLiaisonAjouterTarifs.SelectedItem).GetNoLiaison());
+                            maCde.Parameters.AddWithValue("@TARIF", tbx.Text);
+
+                            maCde.ExecuteNonQuery();
+                            maCde.Parameters.Clear();
+                            tbx.Clear();
+                        }
+                        MessageBox.Show("Ajout des tarifs effectué", "Confirmation après ajout", MessageBoxButtons.OK);
+                    }
+                    catch (MySqlException e)
+                    {
+                        MessageBox.Show("Erreur : " + e.ToString(), "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    finally
+                    {
+                        if (maCnx is object & maCnx.State == ConnectionState.Open)
+                        {
+                            maCnx.Close();
+                        }
+
+                    }
+                }
             }
+            MessageBox.Show("Ajout effectué", "Confirmation après ajout", MessageBoxButtons.OK);
         }
     }
 }

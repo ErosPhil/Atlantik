@@ -115,7 +115,7 @@ namespace Atlantik
                             maCde.Parameters.Clear();
                             tbx.Clear();
                         }
-                        MessageBox.Show("Ajout effectué", "Confirmation après ajout", MessageBoxButtons.OK);
+                        MessageBox.Show("Ajout du bateau effectué", "Confirmation après ajout", MessageBoxButtons.OK);
                     }
                     catch (MySqlException e)
                     {

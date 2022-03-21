@@ -54,6 +54,8 @@ namespace Atlantik
                         maCde.ExecuteNonQuery();
 
                         tbxNomSecteur.Clear();
+
+                        MessageBox.Show("Ajout du secteur effectué", "Confirmation après ajout", MessageBoxButtons.OK);
                     }
                     catch (MySqlException e)
                     {
