@@ -110,6 +110,7 @@ namespace Atlantik
                     }
                 }
             }
+            else { MessageBox.Show("L'un des champs est vide ou incorrect", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
 
         private void tbxDistance_TextChanged(object sender, EventArgs e)
