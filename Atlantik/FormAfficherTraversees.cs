@@ -214,8 +214,8 @@ namespace Atlantik
 
                     maCnx.Open();
 
-                    string requete = "SELECT t.notraversee, t.dateheuredepart, b.nobateau, b.nom 'nombateau' FROM traversee t, bateau b WHERE t.nobateau = b.nobateau AND t.noliaison = @NOLIAISON AND t.dateheuredepart LIKE @DATE GROUP BY t.notraversee";
-                    //on va chercher de quoi remplir les 3 premières colonnes (notraversee, heure de départ, nombateau) ainsi que le nobateau qui servira pour les catégories           en groupant par traversée (chaque traversée est unique)
+                    string requete = "SELECT t.notraversee, t.dateheuredepart, b.nobateau, b.nom 'nombateau' FROM traversee t, bateau b WHERE t.nobateau = b.nobateau AND t.noliaison = @NOLIAISON AND t.dateheuredepart LIKE @DATE";
+                    //on va chercher de quoi remplir les 3 premières colonnes (notraversee, heure de départ, nombateau) ainsi que le nobateau qui servira pour les catégories
 
                     var maCde = new MySqlCommand(requete, maCnx);
 
@@ -224,35 +224,35 @@ namespace Atlantik
 
                     jeuEnr = maCde.ExecuteReader();
 
-                    if(jeuEnr.Read())
+                    bool isempty = true;
+                    while (jeuEnr.Read()) //tant qu'on trouve une traversée
                     {
-                        while (jeuEnr.Read()) //tant qu'on trouve une traversée
+                        isempty = false;
+                        var tabItem = new string[3 + tabCat.Length]; //tabItem pour l'insertion des données dans la listview
+
+                        tabItem[0] = jeuEnr["notraversee"].ToString(); //première colonne
+                        tabItem[1] = ((DateTime)jeuEnr["dateheuredepart"]).ToString("HH:mm"); //deuxième colonne
+                        tabItem[2] = jeuEnr["nombateau"].ToString(); //troisième colonne
+
+                        int x = 3; //incrémenteur
+
+                        foreach (Categorie cat in tabCat) //pour chaque catégorie dans la table des catégories
                         {
-                            var tabItem = new string[3 + tabCat.Length]; //tabItem pour l'insertion des données dans la listview
-
-                            tabItem[0] = jeuEnr["notraversee"].ToString(); //première colonne
-                            tabItem[1] = ((DateTime)jeuEnr["dateheuredepart"]).ToString("HH:mm"); //deuxième colonne
-                            tabItem[2] = jeuEnr["nombateau"].ToString(); //troisième colonne
-
-                            int x = 3; //incrémenteur
-
-                            foreach (Categorie cat in tabCat) //pour chaque catégorie dans la table des catégories
+                            if (cat != null) //si la catégorie (du tableau) n'est pas vide
                             {
-                                if (cat != null) //si la catégorie n'est pas vide
-                                {
-                                    int difference = getCapaciteMaximale(jeuEnr.GetInt32("notraversee"), cat.GetLettre()) - getQuantiteEnregistree(jeuEnr.GetInt32("notraversee"), cat.GetLettre());
-                                    //Différence entre capacitemax et quantiteenregistree
-                                    tabItem[x] = difference.ToString();
-                                    x += 1;
-                                }
+                                int difference = getCapaciteMaximale(jeuEnr.GetInt32("notraversee"), cat.GetLettre()) - getQuantiteEnregistree(jeuEnr.GetInt32("notraversee"), cat.GetLettre());
+                                //Différence entre capacitemax et quantiteenregistree
+
+                                tabItem[x] = difference.ToString();
+                                x += 1;
                             }
-                            ListViewItem Item = new ListViewItem(tabItem);
-                            lvTraversees.Items.Add(Item); //ajout de la ligne dans la listview
                         }
+                        ListViewItem Item = new ListViewItem(tabItem);
+                        lvTraversees.Items.Add(Item); //ajout de la ligne dans la listview
                     }
-                    else
-                    {
-                        MessageBox.Show("Aucune donnée trouvée.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if(isempty)
+                    { 
+                    MessageBox.Show("Aucune donnée trouvée.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
                 catch (MySqlException e)
