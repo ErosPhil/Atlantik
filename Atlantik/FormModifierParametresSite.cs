@@ -115,18 +115,18 @@ namespace Atlantik
         {
             var Textboxes = gbxIdentifiants.Controls.OfType<TextBox>();
             bool vide = false;
-            foreach (TextBox tbx in Textboxes)
-            {
-                var objetRegEx = new Regex(@"^*[0-9]+$");
-                if (tbx.Name == "tbxCleHMAC")
-                {
-                    objetRegEx = new Regex(@"^*[0-9a-zA-Z]+$");
-                }
-                var test = objetRegEx.Match(tbx.Text);
-                if (tbx.Text == "" || !test.Success) { vide = true; }
-            }
-
-            if (tbxMelSite.Text != "" && vide == false)
+            //foreach (TextBox tbx in Textboxes)
+            //{
+                //var objetRegEx = new Regex(@"^*[0-9]+$");
+                //if (tbx.Name == "tbxCleHMAC")
+                    //{
+                    //objetRegEx = new Regex(@"^*[0-9a-zA-Z]+$");
+                    //}
+                //var test = objetRegEx.Match(tbx.Text);
+                //if (tbx.Text == "" || !test.Success) { vide = true; }
+            //}
+            //tbxMelSite.Text != "" && 
+            if (vide == false)
             {
                 DialogResult retour = MessageBox.Show("Êtes-vous sûr de vouloir modifier les paramètres du site ?", "Confirmation avant modification", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
                 if (retour == DialogResult.Yes)
@@ -135,7 +135,7 @@ namespace Atlantik
                     try
                     {
                         maCnx.Open();
-                        string requete = "UPDATE parametres SET site_pb = @SITEPB, rang_pb = @RANGPB, identifiant_pb = @IDENTIFIANTPB, clehmac_pb = @CLEHMACPB, enproduction = @ENPRODUCTION, melsite = @MELSITE WHERE noidentifiant = @NOIDENTIFIANT";
+                        string requete = "UPDATE parametres SET site_pb = @SITEPB, rang_pb = @RANGPB, identifiant_pb = @IDENTIFIANTPB, clehmac_pb = @CLEHMACPB, enproduction = @ENPRODUCTION, melsite = @MELSITE";
 
                         var maCde = new MySqlCommand(requete, maCnx);
 
