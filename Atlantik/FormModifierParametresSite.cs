@@ -135,11 +135,11 @@ namespace Atlantik
                     try
                     {
                         maCnx.Open();
-                        string requete = "UPDATE parametres SET site_pb = @SITEPB, rang_pb = @RANGPB, identifiant_pb = @IDENTIFIANTPB, clehmac_pb = @CLEHMACPB, enproduction = @ENPRODUCTION, melsite = @MELSITE WHERE noidentifiant = @NOIDENTIFIANT";
+                        string requete = "UPDATE parametres SET site_pb = @SITEPB, rang_pb = @RANGPB, identifiant_pb = @IDENTIFIANTPB, clehmac_pb = @CLEHMACPB, enproduction = @ENPRODUCTION, melsite = @MELSITE";
 
                         var maCde = new MySqlCommand(requete, maCnx);
 
-                        maCde.Parameters.AddWithValue("@NOIDENTIFIANT", 160);
+                        //maCde.Parameters.AddWithValue("@NOIDENTIFIANT", 160);
 
                         foreach (TextBox tbx in Textboxes)
                         {
