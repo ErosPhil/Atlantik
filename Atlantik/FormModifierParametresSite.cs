@@ -139,8 +139,6 @@ namespace Atlantik
 
                         var maCde = new MySqlCommand(requete, maCnx);
 
-                        //maCde.Parameters.AddWithValue("@NOIDENTIFIANT", 160);
-
                         foreach (TextBox tbx in Textboxes)
                         {
                             maCde.Parameters.AddWithValue(tbx.Tag.ToString(), tbx.Text);
