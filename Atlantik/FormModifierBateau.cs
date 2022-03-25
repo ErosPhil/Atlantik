@@ -48,6 +48,10 @@ namespace Atlantik
                         if ((string)tbx.Tag == jeuEnr.GetString("lettrecategorie") )
                         {
                             tbx.Text = jeuEnr.GetString("capacitemax");
+                        }   
+                        else
+                        {
+                            tbx.Text = "0";
                         }
                     }
                 }
@@ -136,16 +140,16 @@ namespace Atlantik
         private void btnModifierBateau_Click(object sender, EventArgs ea)
         {
             var Textboxes = gbxCapMaxModifierBateau.Controls.OfType<TextBox>();
-            bool vide = false;
+            bool valide = false;
             foreach (TextBox tbx in Textboxes)
             {
                 var objetRegEx = new Regex(@"^*[0-9]+$");
                 var test = objetRegEx.Match(tbx.Text);
 
-                if (tbx.Text == "" || !test.Success) { vide = true; }
+                if (!test.Success) { valide = true; }
             }
 
-            if (cbxModifierBateau.SelectedItem != null && vide == false)
+            if (cbxModifierBateau.SelectedItem != null && valide == false)
             {
                 DialogResult retour = MessageBox.Show("Êtes-vous sûr de vouloir modifier le bateau " + ((Bateau)cbxModifierBateau.SelectedItem).ToString() + " ?", "Confirmation avant modification", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
                 if (retour == DialogResult.Yes)

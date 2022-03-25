@@ -72,16 +72,16 @@ namespace Atlantik
         private void btnAjouterBateau_Click(object sender, EventArgs ea)
         {
             var Textboxes = gbxCapMaxAjouterBateau.Controls.OfType<TextBox>(); //on va chercher toutes les textbox des catégories dans la groupbox
-            bool vide = false;
+            bool valide = false;
             foreach (TextBox tbx in Textboxes)
             {
                 var objetRegEx = new Regex(@"^*[0-9]+$");
                 var test = objetRegEx.Match(tbx.Text);
 
-                if (tbx.Text == "" || !test.Success) { vide = true; }
+                if (!test.Success) { valide = true; }
             }
 
-            if (tbxNomAjouterBateau.Text != "" && vide == false)
+            if (tbxNomAjouterBateau.Text != "" && valide == false)
             {
                 DialogResult retour = MessageBox.Show("Êtes-vous sûr de vouloir ajouter le bateau " + tbxNomAjouterBateau.Text + " ?", "Confirmation avant ajout", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
                 if (retour == DialogResult.Yes)
