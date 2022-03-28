@@ -32,7 +32,7 @@ namespace Atlantik
             {
                 maCnx.Open();
 
-                string requete = "SELECT sum(quantite)'nbplacesOQP' FROM traversee t, reservation r, enregistrer e WHERE t.notraversee = r.notraversee AND r.noreservation = e.noreservation AND t.notraversee = @NOTRAVERSEE AND e.lettrecategorie = @LETTRECATEGORIE;";
+                string requete = "SELECT sum(quantite)'nbplacesOQP' FROM traversee t, reservation r, enregistrer e WHERE t.notraversee = r.notraversee AND r.noreservation = e.noreservation AND t.notraversee = @NOTRAVERSEE AND e.lettrecategorie = @LETTRECATEGORIE";
                 var maCde = new MySqlCommand(requete, maCnx);
 
                 maCde.Parameters.AddWithValue("@NOTRAVERSEE", notraversee);
@@ -91,7 +91,7 @@ namespace Atlantik
             catch (MySqlException e)
             {
                 MessageBox.Show("Erreur : " + e.ToString(), "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
+                return -10000;
             }
             finally
             {

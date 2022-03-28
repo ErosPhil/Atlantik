@@ -108,6 +108,7 @@ namespace Atlantik
         {
             if (lvReservations.SelectedItems.Count > 0 )
             {
+                gbxDetailsReservation.Controls.Clear();
                 MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
                 try
                 {
