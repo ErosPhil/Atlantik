@@ -48,7 +48,7 @@ namespace Atlantik
             // lblMelSite
             // 
             this.lblMelSite.AutoSize = true;
-            this.lblMelSite.Location = new System.Drawing.Point(132, 346);
+            this.lblMelSite.Location = new System.Drawing.Point(115, 346);
             this.lblMelSite.Name = "lblMelSite";
             this.lblMelSite.Size = new System.Drawing.Size(49, 13);
             this.lblMelSite.TabIndex = 1;
@@ -56,9 +56,9 @@ namespace Atlantik
             // 
             // tbxMelSite
             // 
-            this.tbxMelSite.Location = new System.Drawing.Point(187, 343);
+            this.tbxMelSite.Location = new System.Drawing.Point(170, 343);
             this.tbxMelSite.Name = "tbxMelSite";
-            this.tbxMelSite.Size = new System.Drawing.Size(100, 20);
+            this.tbxMelSite.Size = new System.Drawing.Size(117, 20);
             this.tbxMelSite.TabIndex = 2;
             // 
             // btnModifierParametresSite

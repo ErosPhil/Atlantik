@@ -96,6 +96,8 @@ namespace Atlantik
                     gbxIdentifiants.Controls.Add(textboxCleHMAC);
 
                     if (jeuEnr.GetBoolean("enproduction") == true) { cbxEnProduction.Checked = true; }
+
+                    tbxMelSite.Text = jeuEnr.GetString("melsite");
                 }
             }
             catch (MySqlException e)
