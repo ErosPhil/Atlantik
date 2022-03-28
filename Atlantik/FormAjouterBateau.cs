@@ -42,7 +42,7 @@ namespace Atlantik
 
                     Label label = new Label();
                     label.Name = "lbl" + categorie.GetLettre() + categorie.GetLibelle() + "AjouterBateau"; //lblAPassagerAjouterBateau
-                    label.Text = categorie.ToString() + " :"; //A (Passager) :
+                    label.Text = categorie.ToString() + " :"; //EXEMPLE: A (Passager) :
                     label.Location = new Point(15, i * 35 + 35);
                     gbxCapMaxAjouterBateau.Controls.Add(label);
 

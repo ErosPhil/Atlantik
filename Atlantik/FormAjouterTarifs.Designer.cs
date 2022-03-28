@@ -107,7 +107,7 @@ namespace Atlantik
             // 
             this.gbxTarifsCategorieType.Location = new System.Drawing.Point(198, 9);
             this.gbxTarifsCategorieType.Name = "gbxTarifsCategorieType";
-            this.gbxTarifsCategorieType.Size = new System.Drawing.Size(246, 334);
+            this.gbxTarifsCategorieType.Size = new System.Drawing.Size(246, 349);
             this.gbxTarifsCategorieType.TabIndex = 13;
             this.gbxTarifsCategorieType.TabStop = false;
             this.gbxTarifsCategorieType.Text = "Tarifs par Catégorie-Type";
