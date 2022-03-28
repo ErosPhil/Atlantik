@@ -67,7 +67,8 @@ namespace Atlantik
                 Label label2 = new Label();
                 label2.Name = "lblTitreTarif";
                 label2.Text = "Tarif";
-                label2.Location = new Point(140, 20);
+                label2.Location = new Point(150, 20);
+                label2.Width = 60;
                 gbxTarifsCategorieType.Controls.Add(label2);
 
                 maCnx.Open();
@@ -82,18 +83,29 @@ namespace Atlantik
 
                 while(jeuEnr.Read())
                 {
+                    int u = 30;
+                    if (i > 10)
+                    {
+                        
+                        this.Size = new Size(477, 489 + (i-10) * u);
+                        lblPeriodeAjouterTarifs.Location = new Point(12, 402 + (i- 10) * u);
+                        cmbPeriodeAjouterTarifs.Location = new Point(99, 399 + (i-10) * u);
+                        btnAjouterTarifs.Location = new Point(325, 397 + (i-10) * u);
+                        gbxTarifsCategorieType.Size = new Size(246, 349 + (i-10) * u);
+                    }
+
                     CategorieType categorietype = new CategorieType(jeuEnr.GetString("lettrecategorie"), jeuEnr.GetInt32("notype"), jeuEnr.GetString("libelle"));
 
                     Label label = new Label();
                     label.Name = "lbl" + categorietype.GetLettreCategorie() + categorietype.GetNoType().ToString() + categorietype.GetLibelle() + "AjouterTarifs";
                     label.Text = categorietype.ToString() + " :";
-                    label.Location = new Point(10, i * 30 + 45);
-                    label.Width = 130;
+                    label.Location = new Point(10, i * 29 + 45);
+                    label.Width = 145;
                     gbxTarifsCategorieType.Controls.Add(label);
 
                     TextBox textbox = new TextBox();
                     textbox.Name = "tbx" + categorietype.GetLettreCategorie() + categorietype.GetNoType().ToString() + categorietype.GetLibelle() + "AjouterTarifs";
-                    textbox.Location = new Point(140, i * 30 + 45);
+                    textbox.Location = new Point(155, i * 29 + 44);
                     textbox.Multiline = true;
                     textbox.Width = 75;
                     textbox.Tag = categorietype;
