@@ -83,10 +83,9 @@ namespace Atlantik
 
                 while(jeuEnr.Read())
                 {
-                    int u = 30;
                     if (i > 10)
                     {
-                        
+                        int u = 44;
                         this.Size = new Size(477, 489 + (i-10) * u);
                         lblPeriodeAjouterTarifs.Location = new Point(12, 402 + (i- 10) * u);
                         cmbPeriodeAjouterTarifs.Location = new Point(99, 399 + (i-10) * u);
