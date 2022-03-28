@@ -22,10 +22,14 @@ namespace Atlantik
 
         private void cbxModifierBateau_SelectedIndexChanged(object sender, EventArgs ea)
         {
+            var Textboxes = gbxCapMaxModifierBateau.Controls.OfType<TextBox>();
+            foreach (TextBox tbx in Textboxes)
+            {
+                tbx.Clear();
+            }
             MySqlDataReader jeuEnr = null;
             MySqlConnection maCnx;
             maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
-
             try
             {
                 string requete;
@@ -39,8 +43,6 @@ namespace Atlantik
 
                 jeuEnr = maCde.ExecuteReader();
 
-                var Textboxes = gbxCapMaxModifierBateau.Controls.OfType<TextBox>();
-
                 while (jeuEnr.Read())
                 {
                     foreach(TextBox tbx in Textboxes)
@@ -48,13 +50,16 @@ namespace Atlantik
                         if ((string)tbx.Tag == jeuEnr.GetString("lettrecategorie") )
                         {
                             tbx.Text = jeuEnr.GetString("capacitemax");
-                        }   
-                        else
+                        }
+                        
+                        if (tbx.Text == "")
                         {
                             tbx.Text = "0";
                         }
                     }
                 }
+
+
             }
             catch (MySqlException e)
             {
