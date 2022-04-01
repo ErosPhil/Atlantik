@@ -15,19 +15,18 @@ namespace Atlantik
 {
     public partial class FormAfficherTraversees : Form
     {
+        MySqlConnection maCnx;
         public FormAfficherTraversees()
         {
             InitializeComponent();
+            maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
         }
 
         private Categorie[] tabCat = new Categorie[10]; //tableau contenant les catégories chargées à l'ouverture de la fenêtre
 
         private int getQuantiteEnregistree(int notraversee, string lettrecategorie)
         {// fonction qui pour un notraversee et une lettrecategorie retourne le nb de places enregistrées (dans les enregistrements de cette traversée)
-
             MySqlDataReader jeuEnr = null;
-            MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
-            
             try
             {
                 maCnx.Open();
@@ -65,10 +64,7 @@ namespace Atlantik
 
         private int getCapaciteMaximale(int notraversee, string lettrecategorie)
         {// fonction qui pour un notraversee et une lettrecategorie retourne le nb de places maximales (dans la catégorie en question par rapport au bateau de la traversée)
-
             MySqlDataReader jeuEnr = null;
-            MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
-
             try
             {
                 maCnx.Open();
@@ -111,9 +107,7 @@ namespace Atlantik
             lvTraversees.Columns.Add("Heure", 50); //
             lvTraversees.Columns.Add("Bateau", 75); //
             dateDateAfficherTraversees.Value = DateTime.Now; //Actualise la valeur par défaut du calendrier à celle d'aujourd'hui
-
             MySqlDataReader jeuEnr = null;
-            MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
             try
             {
                 maCnx.Open();
@@ -124,7 +118,7 @@ namespace Atlantik
 
                 jeuEnr = maCde.ExecuteReader();
 
-                int x = 0; //compteur d'incrémentation
+                int x = 0; //incrémenteur
 
                 while (jeuEnr.Read()) //tant qu'on trouve une catégorie
                 {
@@ -165,7 +159,6 @@ namespace Atlantik
         {
             cmbLiaisonAfficherTraversees.Items.Clear();
             MySqlDataReader jeuEnr = null;
-            MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
             try
             {
                 maCnx.Open();
@@ -207,7 +200,6 @@ namespace Atlantik
             if (cmbLiaisonAfficherTraversees.SelectedItem != null)
             {
                 MySqlDataReader jeuEnr = null;
-                MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
                 try
                 {
                     lvTraversees.Items.Clear(); //On clear le tableau

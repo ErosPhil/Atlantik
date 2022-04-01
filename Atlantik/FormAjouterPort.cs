@@ -15,9 +15,11 @@ namespace Atlantik
 {
     public partial class FormAjouterPort : Form
     {
+        MySqlConnection maCnx;
         public FormAjouterPort()
         {
             InitializeComponent();
+            maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
         }
 
         private void FormAjouterPort_Load(object sender, EventArgs e)
@@ -35,7 +37,6 @@ namespace Atlantik
                 DialogResult retour = MessageBox.Show("Êtes-vous sûr de vouloir ajouter le port " + tbxNomPort.Text + " ?", "Confirmation avant ajout", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
                 if (retour == DialogResult.Yes)
                 {
-                    MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
                     try
                     {
                         maCnx.Open();

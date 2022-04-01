@@ -15,9 +15,11 @@ namespace Atlantik
 {
     public partial class FormAjouterTraversee : Form
     {
+        MySqlConnection maCnx;
         public FormAjouterTraversee()
         {
             InitializeComponent();
+            maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
         }
         private void FormAjouterTraversee_Load(object sender, EventArgs ae)
         {
@@ -27,9 +29,6 @@ namespace Atlantik
             dateArrivee.CustomFormat = "ddd dd/MM/yyyy - HH:mm:ss";
 
             MySqlDataReader jeuEnr = null;
-            MySqlConnection maCnx;
-            maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
-
             try
             {
                 string requete;
@@ -72,7 +71,6 @@ namespace Atlantik
                 {
                     maCnx.Close();
                 }
-
             }
         }
 
@@ -80,9 +78,6 @@ namespace Atlantik
         {
             cmbLiaisonAjouterTraversee.Items.Clear();
             MySqlDataReader jeuEnr = null;
-            MySqlConnection maCnx;
-            maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
-
             try
             {
                 string requete;
@@ -127,7 +122,6 @@ namespace Atlantik
                 DialogResult retour = MessageBox.Show("Êtes-vous sûr de vouloir ajouter la traversée du bateau " + ((Bateau)cmbBateauAjouterTraversee.SelectedItem).ToString() + " effectuant la liaison " + ((Liaison)cmbLiaisonAjouterTraversee.SelectedItem).ToString() + " du secteur " + ((Secteur)lbxSecteursAjouterTraversee.SelectedItem).ToString() + " partant le " + dateDepart.Value + " et revenant le " + dateArrivee.Value + " ?", "Confirmation avant ajout", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
                 if (retour == DialogResult.Yes)
                 {
-                    MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
                     try
                     {
                         maCnx.Open();

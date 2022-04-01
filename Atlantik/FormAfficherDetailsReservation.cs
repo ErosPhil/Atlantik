@@ -15,9 +15,11 @@ namespace Atlantik
 {
     public partial class FormAfficherDetailsReservation : Form
     {
+        MySqlConnection maCnx;
         public FormAfficherDetailsReservation()
         {
             InitializeComponent();
+            maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
         }
 
         private void FormAfficherDetailsReservation_Load(object sender, EventArgs ea)
@@ -30,9 +32,7 @@ namespace Atlantik
             lvReservations.Columns.Add("Liaison", 160);
             lvReservations.Columns.Add("n° Traversée", 60);
             lvReservations.Columns.Add("Date départ", 124);
-
             MySqlDataReader jeuEnr = null;
-            MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
             try
             {
                 maCnx.Open();
@@ -66,7 +66,6 @@ namespace Atlantik
         {
             lvReservations.Items.Clear();
             MySqlDataReader jeuEnr = null;
-            MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
             try
             {
                 maCnx.Open();
@@ -109,7 +108,6 @@ namespace Atlantik
             if (lvReservations.SelectedItems.Count > 0 )
             {
                 gbxDetailsReservation.Controls.Clear();
-                MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
                 try
                 {
                     maCnx.Open();
@@ -128,13 +126,11 @@ namespace Atlantik
                     while (jeuEnr.Read())
                     {
                         Label labelLibelle = new Label();
-                        labelLibelle.Name = "lbl" + jeuEnr["libelle"].ToString();
                         labelLibelle.Text = jeuEnr["libelle"].ToString();
                         labelLibelle.Location = new Point(25, 25 + x*21);
                         gbxDetailsReservation.Controls.Add(labelLibelle);
 
                         Label labelQuantite = new Label();
-                        labelQuantite.Name = "lblQuantite" + jeuEnr["libelle"].ToString();
                         labelQuantite.Text = ": " + jeuEnr["quantite"].ToString();
                         labelQuantite.Location = new Point(160, 25 + x*21);
                         gbxDetailsReservation.Controls.Add(labelQuantite);
@@ -156,13 +152,11 @@ namespace Atlantik
                     jeuEnr.Read();
 
                     Label labelMT = new Label();
-                    labelMT.Name = "lblMT";
                     labelMT.Text = "Montant total : ";
                     labelMT.Location = new Point(25, 40 + x * 21);
                     gbxDetailsReservation.Controls.Add(labelMT);
 
                     Label labelMontantTotal = new Label();
-                    labelMontantTotal.Name = "lblMontantTotal";
                     labelMontantTotal.Text = jeuEnr["montanttotal"].ToString() + " euros";
                     labelMontantTotal.Location = new Point(166, 40 + x * 21);
                     gbxDetailsReservation.Controls.Add(labelMontantTotal);
@@ -170,7 +164,6 @@ namespace Atlantik
                     x++;
 
                     Label labelReglement = new Label();
-                    labelReglement.Name = "lblReglement";
                     labelReglement.Location = new Point(20, 60 + x * 21);
                     labelReglement.Width = 250;
 

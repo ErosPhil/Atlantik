@@ -15,15 +15,16 @@ namespace Atlantik
 {
     public partial class FormAjouterBateau : Form
     {
+        MySqlConnection maCnx;
         public FormAjouterBateau()
         {
             InitializeComponent();
+            maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
         }
 
         private void FormAjouterBateau_Load(object sender, EventArgs ea)
         {
             MySqlDataReader jeuEnr = null;
-            MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
             try
             {
                 maCnx.Open();
@@ -41,13 +42,11 @@ namespace Atlantik
                     Categorie categorie = new Categorie(jeuEnr["lettrecategorie"].ToString(), jeuEnr["libelle"].ToString());
 
                     Label label = new Label();
-                    label.Name = "lbl" + categorie.GetLettre() + categorie.GetLibelle() + "AjouterBateau"; //lblAPassagerAjouterBateau
                     label.Text = categorie.ToString() + " :"; //EXEMPLE: A (Passager) :
                     label.Location = new Point(15, i * 35 + 35);
                     gbxCapMaxAjouterBateau.Controls.Add(label);
 
                     TextBox textbox = new TextBox();
-                    textbox.Name = "tbx" + categorie.GetLettre() + categorie.GetLibelle() + "AjouterBateau"; //tbxAPassagerAjouterBateau
                     textbox.Location = new Point(135, i * 35 + 35);
                     textbox.Multiline = true;
                     textbox.Width = 75;
@@ -71,9 +70,9 @@ namespace Atlantik
 
         private void btnAjouterBateau_Click(object sender, EventArgs ea)
         {
-            var Textboxes = gbxCapMaxAjouterBateau.Controls.OfType<TextBox>(); //on va chercher toutes les textbox des catégories dans la groupbox
+            var lesTextboxes = gbxCapMaxAjouterBateau.Controls.OfType<TextBox>(); //on va chercher toutes les textbox des catégories dans la groupbox
             bool valide = false;
-            foreach (TextBox tbx in Textboxes)
+            foreach (TextBox tbx in lesTextboxes)
             {
                 var objetRegEx = new Regex(@"^*[0-9]+$");
                 var test = objetRegEx.Match(tbx.Text);
@@ -86,7 +85,6 @@ namespace Atlantik
                 DialogResult retour = MessageBox.Show("Êtes-vous sûr de vouloir ajouter le bateau " + tbxNomAjouterBateau.Text + " ?", "Confirmation avant ajout", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
                 if (retour == DialogResult.Yes)
                 {
-                    MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
                     try
                     {
                         maCnx.Open();
@@ -107,7 +105,7 @@ namespace Atlantik
 
                         maCde = new MySqlCommand(requete, maCnx);
 
-                        foreach (TextBox tbx in Textboxes)
+                        foreach (TextBox tbx in lesTextboxes)
                         {
                             maCde.Parameters.AddWithValue("@LETTRECATEGORIE", tbx.Tag);
                             maCde.Parameters.AddWithValue("@NOBATEAU", dernierID);

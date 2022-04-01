@@ -15,71 +15,16 @@ namespace Atlantik
 {
     public partial class FormModifierBateau : Form
     {
+        MySqlConnection maCnx;
         public FormModifierBateau()
         {
             InitializeComponent();
-        }
-
-        private void cbxModifierBateau_SelectedIndexChanged(object sender, EventArgs ea)
-        {
-            var Textboxes = gbxCapMaxModifierBateau.Controls.OfType<TextBox>();
-            foreach (TextBox tbx in Textboxes)
-            {
-                tbx.Clear();
-            }
-            MySqlDataReader jeuEnr = null;
-            MySqlConnection maCnx;
             maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
-            try
-            {
-                string requete;
-                maCnx.Open();
-
-                requete = "SELECT * FROM contenir WHERE nobateau LIKE @NOBATEAU";
-
-                var maCde = new MySqlCommand(requete, maCnx);
-
-                maCde.Parameters.AddWithValue("@NOBATEAU", ((Bateau)cbxModifierBateau.SelectedItem).GetNoBateau());
-
-                jeuEnr = maCde.ExecuteReader();
-
-                while (jeuEnr.Read())
-                {
-                    foreach(TextBox tbx in Textboxes)
-                    {
-                        if ((string)tbx.Tag == jeuEnr.GetString("lettrecategorie") )
-                        {
-                            tbx.Text = jeuEnr.GetString("capacitemax");
-                        }
-                        
-                        if (tbx.Text == "")
-                        {
-                            tbx.Text = "0";
-                        }
-                    }
-                }
-
-
-            }
-            catch (MySqlException e)
-            {
-                MessageBox.Show("Erreur : " + e.ToString(), "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                if (maCnx is object & maCnx.State == ConnectionState.Open)
-                {
-                    maCnx.Close();
-                }
-            }
         }
 
         private void FormModifierBateau_Load(object sender, EventArgs ea)
         {
             MySqlDataReader jeuEnr = null;
-            MySqlConnection maCnx;
-            maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
-
             try
             {
                 string requete;
@@ -98,13 +43,11 @@ namespace Atlantik
                     Categorie categorie = new Categorie(jeuEnr["lettrecategorie"].ToString(), jeuEnr["libelle"].ToString());
 
                     Label label = new Label();
-                    label.Name = "lbl" + categorie.GetLettre() + categorie.GetLibelle() + "ModifierBateau";
                     label.Text = categorie.ToString() + " :";
                     label.Location = new Point(15, i * 35 + 35);
                     gbxCapMaxModifierBateau.Controls.Add(label);
 
                     TextBox textbox = new TextBox();
-                    textbox.Name = "tbx" + categorie.GetLettre() + categorie.GetLibelle() + "ModifierBateau";
                     textbox.Location = new Point(135, i * 35 + 35);
                     textbox.Multiline = true;
                     textbox.Width = 75;
@@ -138,15 +81,64 @@ namespace Atlantik
                 {
                     maCnx.Close();
                 }
+            }
+        }
 
+        private void cbxModifierBateau_SelectedIndexChanged(object sender, EventArgs ea)
+        {
+            var lesTextboxes = gbxCapMaxModifierBateau.Controls.OfType<TextBox>();
+            foreach (TextBox tbx in lesTextboxes)
+            {
+                tbx.Clear();
+            }
+            MySqlDataReader jeuEnr = null;
+            try
+            {
+                string requete;
+                maCnx.Open();
+
+                requete = "SELECT * FROM contenir WHERE nobateau LIKE @NOBATEAU";
+
+                var maCde = new MySqlCommand(requete, maCnx);
+
+                maCde.Parameters.AddWithValue("@NOBATEAU", ((Bateau)cbxModifierBateau.SelectedItem).GetNoBateau());
+
+                jeuEnr = maCde.ExecuteReader();
+
+                while (jeuEnr.Read())
+                {
+                    foreach(TextBox tbx in lesTextboxes)
+                    {
+                        if ((string)tbx.Tag == jeuEnr.GetString("lettrecategorie") )
+                        {
+                            tbx.Text = jeuEnr.GetString("capacitemax");
+                        }
+                        
+                        if (tbx.Text == "")
+                        {
+                            tbx.Text = "0";
+                        }
+                    }
+                }
+            }
+            catch (MySqlException e)
+            {
+                MessageBox.Show("Erreur : " + e.ToString(), "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (maCnx is object & maCnx.State == ConnectionState.Open)
+                {
+                    maCnx.Close();
+                }
             }
         }
 
         private void btnModifierBateau_Click(object sender, EventArgs ea)
         {
-            var Textboxes = gbxCapMaxModifierBateau.Controls.OfType<TextBox>();
+            var lesTextboxes = gbxCapMaxModifierBateau.Controls.OfType<TextBox>();
             bool valide = false;
-            foreach (TextBox tbx in Textboxes)
+            foreach (TextBox tbx in lesTextboxes)
             {
                 var objetRegEx = new Regex(@"^*[0-9]+$");
                 var test = objetRegEx.Match(tbx.Text);
@@ -168,7 +160,7 @@ namespace Atlantik
 
                         var maCde = new MySqlCommand(requete, maCnx);
 
-                        foreach (TextBox tbx in Textboxes)
+                        foreach (TextBox tbx in lesTextboxes)
                         {
                             maCde.Parameters.AddWithValue("@CAPACITEMAX", tbx.Text);
                             maCde.Parameters.AddWithValue("@NOBATEAU", ((Bateau)cbxModifierBateau.SelectedItem).GetNoBateau());
