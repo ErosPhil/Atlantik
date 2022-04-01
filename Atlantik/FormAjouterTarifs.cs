@@ -15,16 +15,16 @@ namespace Atlantik
 {
     public partial class FormAjouterTarifs : Form
     {
+        MySqlConnection maCnx;
         public FormAjouterTarifs()
         {
             InitializeComponent();
+            maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
         }
 
         private void FormAjouterTarifs_Load(object sender, EventArgs ea)
         {
             MySqlDataReader jeuEnr = null;
-            MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
-
             try
             {
                 maCnx.Open();
@@ -59,13 +59,11 @@ namespace Atlantik
                 maCnx.Close();
 
                 Label label1 = new Label();
-                label1.Name = "lblTitreCategorieType";
                 label1.Text = "Catégorie - Type";
                 label1.Location = new Point(10, 20);
                 gbxTarifsCategorieType.Controls.Add(label1);
 
                 Label label2 = new Label();
-                label2.Name = "lblTitreTarif";
                 label2.Text = "Tarif";
                 label2.Location = new Point(150, 20);
                 label2.Width = 60;
@@ -83,28 +81,26 @@ namespace Atlantik
 
                 while(jeuEnr.Read())
                 {
+                    int ecartTextboxesEtLablels = 44;
                     if (i > 10)
                     {
-                        int u = 44;
-                        this.Size = new Size(477, 489 + (i-10) * u);
-                        lblPeriodeAjouterTarifs.Location = new Point(12, 402 + (i- 10) * u);
-                        cmbPeriodeAjouterTarifs.Location = new Point(99, 399 + (i-10) * u);
-                        btnAjouterTarifs.Location = new Point(325, 397 + (i-10) * u);
-                        gbxTarifsCategorieType.Size = new Size(246, 349 + (i-10) * u);
+                        this.Size = new Size(477, 489 + (i-10) * ecartTextboxesEtLablels);
+                        lblPeriodeAjouterTarifs.Location = new Point(12, 402 + (i- 10) * ecartTextboxesEtLablels);
+                        cmbPeriodeAjouterTarifs.Location = new Point(99, 399 + (i-10) * ecartTextboxesEtLablels);
+                        btnAjouterTarifs.Location = new Point(325, 397 + (i-10) * ecartTextboxesEtLablels);
+                        gbxTarifsCategorieType.Size = new Size(246, 349 + (i-10) * ecartTextboxesEtLablels);
                     }
 
                     CategorieType categorietype = new CategorieType(jeuEnr.GetString("lettrecategorie"), jeuEnr.GetInt32("notype"), jeuEnr.GetString("libelle"));
 
                     Label label = new Label();
-                    label.Name = "lbl" + categorietype.GetLettreCategorie() + categorietype.GetNoType().ToString() + categorietype.GetLibelle() + "AjouterTarifs";
                     label.Text = categorietype.ToString() + " :";
-                    label.Location = new Point(10, i * 29 + 45);
+                    label.Location = new Point(10, i * 29 + ecartTextboxesEtLablels+1);
                     label.Width = 145;
                     gbxTarifsCategorieType.Controls.Add(label);
 
                     TextBox textbox = new TextBox();
-                    textbox.Name = "tbx" + categorietype.GetLettreCategorie() + categorietype.GetNoType().ToString() + categorietype.GetLibelle() + "AjouterTarifs";
-                    textbox.Location = new Point(155, i * 29 + 44);
+                    textbox.Location = new Point(155, i * 29 + ecartTextboxesEtLablels);
                     textbox.Multiline = true;
                     textbox.Width = 75;
                     textbox.Tag = categorietype;
@@ -129,7 +125,6 @@ namespace Atlantik
         {
             cmbLiaisonAjouterTarifs.Items.Clear();
             MySqlDataReader jeuEnr = null;
-            MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
             try
             {
                 maCnx.Open();
@@ -165,9 +160,9 @@ namespace Atlantik
 
         private void btnAjouterTarifs_Click(object sender, EventArgs ea)
         {
-            var Textboxes = gbxTarifsCategorieType.Controls.OfType<TextBox>();
+            var lesTextboxes = gbxTarifsCategorieType.Controls.OfType<TextBox>();
             bool vide = false;
-            foreach (TextBox tbx in Textboxes)
+            foreach (TextBox tbx in lesTextboxes)
             {
                 var objetRegEx = new Regex(@"^*[0-9]+$");
                 var test = objetRegEx.Match(tbx.Text);
@@ -180,7 +175,6 @@ namespace Atlantik
                 DialogResult retour = MessageBox.Show("Êtes-vous sûr de vouloir ajouter les tarifs entrés pour la liaison " + ((Liaison)cmbLiaisonAjouterTarifs.SelectedItem).ToString() + " du secteur " + ((Secteur)lbxSecteursAjouterTarifs.SelectedItem).ToString() + " pour la période du " + ((Periode)cmbPeriodeAjouterTarifs.SelectedItem).ToString() + " ?", "Confirmation avant ajout", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
                 if (retour == DialogResult.Yes)
                 {
-                    MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
                     try
                     {
                         maCnx.Open();
@@ -189,7 +183,7 @@ namespace Atlantik
 
                         var maCde = new MySqlCommand(requete, maCnx);
 
-                        foreach (TextBox tbx in Textboxes)
+                        foreach (TextBox tbx in lesTextboxes)
                         {
                             maCde.Parameters.AddWithValue("@NOPERIODE", ((Periode)cmbPeriodeAjouterTarifs.SelectedItem).GetNoPeriode());
                             maCde.Parameters.AddWithValue("@LETTRECATEGORIE", ((CategorieType)tbx.Tag).GetLettreCategorie());

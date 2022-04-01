@@ -15,15 +15,16 @@ namespace Atlantik
 {
     public partial class FormAjouterLiaison : Form
     {
+        MySqlConnection maCnx;
         public FormAjouterLiaison()
         {
             InitializeComponent();
+            maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
         }
 
         private void FormAjouterLiaison_Load(object sender, EventArgs ea)
         {
             MySqlDataReader jeuEnr = null;
-            MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
             try
             {
                 maCnx.Open();
@@ -78,7 +79,6 @@ namespace Atlantik
                 DialogResult retour = MessageBox.Show("Êtes-vous sûr de vouloir ajouter la liaison " + ((Port)cmbDepart.SelectedItem).ToString() + " - "+ ((Port)cmbArrivee.SelectedItem).ToString() + " du secteur "+ ((Secteur)lbxSecteursAjouterLiaison.SelectedItem).ToString() + " et de distance "+ tbxDistance.Text + " ?", "Confirmation avant ajout", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
                 if (retour == DialogResult.Yes)
                 {
-                    MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
                     try
                     {
                         maCnx.Open();

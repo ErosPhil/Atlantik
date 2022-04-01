@@ -15,9 +15,11 @@ namespace Atlantik
 {
     public partial class FormAjouterSecteur : Form
     {
+        MySqlConnection maCnx;
         public FormAjouterSecteur()
         {
             InitializeComponent();
+            maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
         }
 
         private void FormAjouterSecteur_Load(object sender, EventArgs e)
@@ -40,7 +42,6 @@ namespace Atlantik
                 DialogResult retour = MessageBox.Show("Êtes-vous sûr de vouloir ajouter le secteur " + tbxNomSecteur.Text + " ?", "Confirmation avant ajout", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
                 if (retour == DialogResult.Yes)
                 {
-                    MySqlConnection maCnx = new MySqlConnection("server=localhost;user=root;database=atlantik;port=3306;password=");
                     try
                     {
                         maCnx.Open();
