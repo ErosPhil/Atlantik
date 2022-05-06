@@ -150,7 +150,7 @@ namespace Atlantik
             {
                 if (maCnx is object & maCnx.State == ConnectionState.Open)
                 {
-                    //maCnx.Close();
+                    maCnx.Close();
                 }
             }
         }
